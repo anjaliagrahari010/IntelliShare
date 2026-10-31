@@ -1,0 +1,562 @@
+{% extends 'dashboard.html' %}
+{% block title %} My Profile | VaultShare {% endblock %}
+{% block content %} {% load static %}
+
+<!-- External Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+  rel="stylesheet" />
+
+<style>
+  :root {
+    --vs-bg-dark: #060913;
+    --vs-surface-1: #0b1120;
+    --vs-surface-2: #111a2e;
+    --vs-surface-card: rgba(17, 26, 46, 0.75);
+    --vs-cyan: #22d3ee;
+    --vs-cyan-glow: rgba(34, 211, 238, 0.25);
+    --vs-blue: #38bdf8;
+    --vs-emerald: #10b981;
+    --vs-rose: #f43f5e;
+    --vs-text-main: #f8fafc;
+    --vs-text-muted: #94a3b8;
+    --vs-border: rgba(148, 163, 184, 0.12);
+    --vs-border-glow: rgba(34, 211, 238, 0.35);
+  }
+
+  body {
+    background-color: var(--vs-bg-dark);
+    font-family: "Plus Jakarta Sans", sans-serif;
+    color: var(--vs-text-main);
+  }
+
+  .font-mono {
+    font-family: "JetBrains Mono", monospace !important;
+  }
+
+  .font-heading {
+    font-family: "Space Grotesk", sans-serif !important;
+  }
+
+  /* Glassmorphism Cards */
+  .vs-glass-card {
+    background: var(--vs-surface-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--vs-border);
+    border-radius: 1.25rem;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .vs-glass-card:hover {
+    border-color: var(--vs-border-glow);
+  }
+
+  /* Avatar Glowing Ring */
+  .vs-avatar-ring {
+    width: 110px;
+    height: 110px;
+    background: linear-gradient(135deg, #0e7490 0%, #164e63 100%);
+    border: 3px solid rgba(34, 211, 238, 0.5);
+    box-shadow:
+      0 0 0 6px rgba(34, 211, 238, 0.08),
+      0 0 35px rgba(34, 211, 238, 0.25);
+    font-size: 2.5rem;
+    font-family: "Space Grotesk", sans-serif;
+  }
+
+  /* Field Badges */
+  .vs-field-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--vs-text-muted);
+    font-family: "JetBrains Mono", monospace;
+    margin-bottom: 0.25rem;
+  }
+
+  .vs-field-value {
+    font-family: "JetBrains Mono", monospace;
+    color: #f1f5f9;
+    word-break: break-all;
+    font-size: 0.92rem;
+  }
+
+  /* Security Items */
+  .vs-security-item {
+    background: rgba(11, 17, 32, 0.6);
+    border: 1px solid var(--vs-border);
+    border-radius: 0.85rem;
+    padding: 1rem;
+    transition: all 0.25s ease;
+  }
+
+  .vs-security-item:hover {
+    transform: translateX(4px);
+    border-color: var(--vs-border-glow);
+    background: rgba(34, 211, 238, 0.04);
+  }
+
+  /* Status Indicator Dot */
+  .vs-status-dot {
+    width: 9px;
+    height: 9px;
+    display: inline-block;
+    border-radius: 50%;
+  }
+
+  /* Stat Number Glowing */
+  .vs-stat-num {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--vs-text-main);
+  }
+
+  /* Activity Row Hover */
+  .vs-activity-row {
+    transition: background-color 0.2s ease;
+  }
+
+  .vs-activity-row:hover {
+    background-color: rgba(34, 211, 238, 0.05) !important;
+  }
+
+  .btn-vs-cyan-sm {
+    background: linear-gradient(135deg, #22d3ee 0%, #0284c7 100%);
+    color: #04131a !important;
+    font-weight: 700;
+    border: none;
+    transition: all 0.2s ease;
+  }
+
+  .btn-vs-cyan-sm:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(34, 211, 238, 0.35);
+  }
+</style>
+
+<section class="py-5" style="
+    background: radial-gradient(
+      120% 100% at 50% 0%,
+      #0d1e30 0%,
+      var(--vs-bg-dark) 70%
+    );
+    min-height: calc(100vh - 200px);
+  ">
+  <div class="container">
+    <!--  PROFILE HEADER  -->
+    <div class="vs-glass-card p-4 p-md-5 mb-4" data-aos="fade-up">
+      <div class="row align-items-center g-4">
+        <!-- Avatar Initials -->
+        <div class="col-md-auto text-center">
+          <div
+            class="vs-avatar-ring rounded-circle d-flex align-items-center justify-content-center text-white fw-bold mx-auto">
+            {{ user.first_name}}{{ user.last_name|slice:":1"|upper }}
+          </div>
+        </div>
+
+        <!-- User Info & Action Buttons -->
+        <div class="col-md">
+          <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+            <h2 class="text-white fw-bold mb-0 font-heading">
+              {{ user.get_first_name|default:user.full_name }}
+            </h2>
+            <span
+              class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 rounded-pill font-mono small">
+              <i class="bi bi-shield-check me-1"></i>VERIFIED VAULT
+            </span>
+          </div>
+
+          <p class="text-secondary mb-3 font-mono small">
+            <i class="bi bi-envelope-at text-info me-1.5"></i>{{ user.email }}
+          </p>
+
+          <div class="d-flex flex-wrap gap-2">
+            <a href="{% url 'edit_profile' %}" class="btn btn-primary">
+              <i class="bi bi-pencil-square"></i>
+              Edit Profile
+            </a>
+            <a href="{% url 'change_password' %}"
+              class="btn btn-outline-light btn-sm px-3 py-1.5 rounded-2 border-secondary border-opacity-30 d-inline-flex align-items-center">
+              <i class="bi bi-key-fill me-1.5 text-info"></i>Change Password
+            </a>
+          </div>
+        </div>
+
+        <!-- Member Timestamp Badge -->
+        <div class="col-md-auto text-md-end border-start border-secondary border-opacity-10 ps-md-4">
+          <div class="vs-field-label">Member Since</div>
+          <div class="vs-field-value text-info fs-6">
+            {{ user.date_joined|date:"d M Y" }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--  STATS STRIP  -->
+    <!-- <div class="row g-3 mb-4" data-aos="fade-up">
+      <div class="col-6 col-md-3">
+        <div
+          class="vs-glass-card text-center p-3 h-100 position-relative overflow-hidden"
+        >
+          <div
+            class="position-absolute top-0 start-0 w-100 bg-info"
+            style="height: 2px; opacity: 0.6"
+          ></div>
+          <i class="bi bi-file-earmark-lock text-info fs-4 mb-1 d-block"></i>
+          <div class="vs-stat-num">{{ files_uploaded_count|default:"0" }}</div>
+          <div
+            class="text-secondary small font-mono text-uppercase"
+            style="font-size: 0.75rem"
+          >
+            Files Uploaded
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div
+          class="vs-glass-card text-center p-3 h-100 position-relative overflow-hidden"
+        >
+          <div
+            class="position-absolute top-0 start-0 w-100 bg-info"
+            style="height: 2px; opacity: 0.6"
+          ></div>
+          <i class="bi bi-send-check text-info fs-4 mb-1 d-block"></i>
+          <div class="vs-stat-num">{{ files_shared_count|default:"0" }}</div>
+          <div
+            class="text-secondary small font-mono text-uppercase"
+            style="font-size: 0.75rem"
+          >
+            Files Shared
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div
+          class="vs-glass-card text-center p-3 h-100 position-relative overflow-hidden"
+        >
+          <div
+            class="position-absolute top-0 start-0 w-100 bg-info"
+            style="height: 2px; opacity: 0.6"
+          ></div>
+          <i class="bi bi-hdd-network text-info fs-4 mb-1 d-block"></i>
+          <div class="vs-stat-num">{{ storage_used|default:"0 MB" }}</div>
+          <div
+            class="text-secondary small font-mono text-uppercase"
+            style="font-size: 0.75rem"
+          >
+            Storage Used
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div
+          class="vs-glass-card text-center p-3 h-100 position-relative overflow-hidden"
+        >
+          <div
+            class="position-absolute top-0 start-0 w-100 bg-info"
+            style="height: 2px; opacity: 0.6"
+          ></div>
+          <i class="bi bi-shield-check text-info fs-4 mb-1 d-block"></i>
+          <div class="vs-stat-num">{{ download_events_count|default:"0" }}</div>
+          <div
+            class="text-secondary small font-mono text-uppercase"
+            style="font-size: 0.75rem"
+          >
+            Access Events Logged
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <!--  MAIN DETAILS GRID  -->
+    <div class="row g-4">
+      <!-- ACCOUNT DETAILS -->
+      <div class="col-lg-6" data-aos="fade-right">
+        <div class="vs-glass-card h-100 p-4">
+          <div
+            class="d-flex align-items-center justify-content-between pb-3 mb-3 border-bottom border-secondary border-opacity-25">
+            <h5 class="text-white mb-0 font-heading">
+              <i class="bi bi-person-vcard text-info me-2"></i>Account Details
+            </h5>
+            <span class="badge bg-secondary bg-opacity-20 text-secondary font-mono small">VERIFIED</span>
+          </div>
+
+          <div class="row gy-3">
+            <div class="col-6">
+              <div class="vs-field-label">Username</div>
+              <div class="vs-field-value">{{ user.full_name }}</div>
+            </div>
+
+            <div class="col-6">
+              <div class="vs-field-label">User ID</div>
+              <div class="vs-field-value text-info">
+                #{{ user.id|stringformat:"05d" }}
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="vs-field-label">Full Name</div>
+              <div class="vs-field-value">
+                {{ user.get_full_name|default:"—" }}
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="vs-field-label">Email Address</div>
+              <div class="vs-field-value text-truncate">{{ user.email }}</div>
+            </div>
+
+            <div class="col-6">
+              <div class="vs-field-label">Account Role</div>
+              <div class="vs-field-value">
+                <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25">{{ user.profile.role|default:"Standard" }}</span>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="vs-field-label">Last Session Login</div>
+              <div class="vs-field-value">
+                {{ user.last_login|date:"d M Y, H:i" }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECURITY OVERVIEW -->
+      <div class="col-lg-6" data-aos="fade-left">
+        <div class="vs-glass-card h-100 p-4">
+          <div
+            class="d-flex align-items-center justify-content-between pb-3 mb-3 border-bottom border-secondary border-opacity-25">
+            <h5 class="text-white mb-0 font-heading">
+              <i class="bi bi-shield-lock text-info me-2"></i>Security Overview
+            </h5>
+            <span
+              class="badge bg-success bg-opacity-15 text-success border border-success border-opacity-30 font-mono small">ENCRYPTED</span>
+          </div>
+
+          <div class="d-flex flex-column gap-3">
+            <!-- Password Status -->
+            <div class="vs-security-item d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center gap-3">
+                <i class="bi bi-key-fill text-info fs-5"></i>
+                <div>
+                  <div class="text-white small fw-semibold">
+                    Master Password
+                  </div>
+                  <div class="text-secondary small font-mono">
+                    Last changed: {{ password_changed_at|default:"—" }}
+                  </div>
+                </div>
+              </div>
+              <a href="#" class="btn btn-outline-info btn-sm font-mono" style="font-size: 0.75rem">Update</a>
+            </div>
+
+            <!-- Two-Factor Authentication -->
+            <div class="vs-security-item d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center gap-3">
+                <i class="bi bi-phone-fill text-info fs-5"></i>
+                <div>
+                  <div class="text-white small fw-semibold">
+                    Two-Factor Authentication
+                  </div>
+                  <div class="text-secondary small font-mono d-flex align-items-center">
+                    <span class="vs-status-dot bg-{{ two_fa_enabled|yesno:'success,danger' }} me-1.5"></span>
+                    <span>{% if user.two_factor_enabled%}
+                      <span class="text-success">
+                        <i class="bi bi-shild-check"></i>Enabled
+                      </span>
+                      {% else %}
+                      <span class="text-warning">
+                        <i class="bi bi-shield-exclamation"></i> Disabled
+                      </span>
+                      {% endif %}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal"
+                data-bs-target="#twoFactorModal">
+                <span font-mono style="font-size: 0.75rem">Details</span>
+              </button>
+            </div>
+
+            <!-- Active Sessions -->
+            <div class="vs-security-item d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center gap-3">
+                <i class="bi bi-laptop text-info fs-5"></i>
+                <div>
+                  <div class="text-white small fw-semibold">
+                    Active Signed-in Sessions
+                  </div>
+                  <div class="text-secondary small font-mono">
+                    {{ active_sessions_count|default:"1" }} active session
+                    device
+                  </div>
+                </div>
+              </div>
+              <a href="#" class="btn btn-outline-info btn-sm font-mono" style="font-size: 0.75rem">Review</a>
+            </div>
+
+            <!-- Audit Logging -->
+            <div class="vs-security-item d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center gap-3">
+                <i class="bi bi-journal-check text-info fs-5"></i>
+                <div>
+                  <div class="text-white small fw-semibold">
+                    Tamper-Evident Audit Trail
+                  </div>
+                  <div class="text-secondary small">
+                    Access & download actions are logged
+                  </div>
+                </div>
+              </div>
+              <a href="{% url 'audit-trail' %}" class="btn btn-outline-info btn-sm font-mono"
+                style="font-size: 0.75rem">View Log</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= RECENT ACTIVITY TABLE ================= -->
+    <div class="vs-glass-card mt-4 overflow-hidden" data-aos="fade-up">
+      <div
+        class="p-4 border-bottom border-secondary border-opacity-25 d-flex align-items-center justify-content-between">
+        <h5 class="text-white mb-0 font-heading">
+          <i class="bi bi-clock-history text-info me-2"></i>Recent Activity
+        </h5>
+        <a href="#" class="text-info small font-mono text-decoration-none">View Full Log <i
+            class="bi bi-arrow-right"></i></a>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle mb-0" style="--bs-table-bg: transparent">
+          <thead>
+            <tr class="text-secondary font-mono small border-bottom border-secondary border-opacity-25"
+              style="font-size: 0.75rem">
+              <th class="ps-4 py-3">EVENT ACTION</th>
+              <th class="py-3">TARGET FILE</th>
+              <th class="py-3">IP ADDRESS</th>
+              <th class="pe-4 py-3">TIMESTAMP</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for log in recent_activity %}
+            <tr class="vs-activity-row border-bottom border-secondary border-opacity-10">
+              <td class="ps-4 py-3">
+                <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 font-mono">
+                  <i class="bi bi-shield-check me-1"></i>{{ log.action }}
+                </span>
+              </td>
+              <td class="vs-field-value py-3">{{ log.file_name }}</td>
+              <td class="vs-field-value text-info py-3">
+                {{ log.ip_address }}
+              </td>
+              <td class="pe-4 text-secondary font-mono small py-3">
+                {{ log.timestamp|date:"d M Y, H:i" }}
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="4" class="text-center text-secondary py-5 font-mono">
+                <i class="bi bi-inbox fs-3 d-block mb-2 text-info opacity-50"></i>
+                <span>No recorded activity events yet.</span>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="modal fade" id="twoFactorModal" tabindex="-1" aria-labelledby="twoFactorModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-light border border-info shadow-lg">
+      <!-- Header -->
+      <div class="modal-header border-secondary">
+        <div>
+          <h5 class="modal-title" id="twoFactorModalLabel">
+            <i class="bi bi-shield-lock-fill text-info me-2"></i> Two-Factor
+            Authentication
+          </h5>
+          <small class="text-secondary"> Manage your account security </small>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <!-- Body -->
+      <div class="modal-body">
+        <!-- Status -->
+        <div class="d-flex align-items-center justify-content-between p-3 mb-3 rounded bg-secondary bg-opacity-10">
+          <div class="d-flex align-items-center">
+            <i class="bi bi-shield-check text-success fs-4 me-3"></i>
+            <div>
+              <h6 class="mb-1">Two-Factor Authentication</h6>
+              <small class="text-secondary">
+                Additional login protection
+              </small>
+            </div>
+          </div>
+          {% if user.two_factor_enabled %}
+          <span class="badge bg-success">
+            <i class="bi bi-check-circle me-1"></i> Enabled
+          </span>
+          {% else %}
+          <span class="badge bg-danger">
+            <i class="bi bi-x-circle me-1"></i> Disabled
+          </span>
+          {% endif %}
+        </div>
+        <!-- Authentication Method -->
+        <div class="d-flex align-items-center p-3 mb-3 rounded bg-secondary bg-opacity-10">
+          <i class="bi bi-envelope-check text-info fs-4 me-3"></i>
+          <div>
+            <h6 class="mb-1">Authentication Method</h6>
+            <small class="text-secondary"> Email OTP </small>
+          </div>
+        </div>
+        <!-- OTP Validity -->
+        <div class="d-flex align-items-center p-3 mb-3 rounded bg-secondary bg-opacity-10">
+          <i class="bi bi-clock-history text-info fs-4 me-3"></i>
+          <div>
+            <h6 class="mb-1">OTP Validity</h6>
+            <small class="text-secondary"> OTP expires after 5 minutes </small>
+          </div>
+        </div>
+        <!-- Login Protection -->
+        <div class="d-flex align-items-center p-3 mb-3 rounded bg-secondary bg-opacity-10">
+          <i class="bi bi-lock-fill text-info fs-4 me-3"></i>
+          <div>
+            <h6 class="mb-1">Login Protection</h6>
+            <small class="text-secondary">
+              OTP verification is required during login
+            </small>
+          </div>
+        </div>
+        <!-- Information -->
+        <div class="alert alert-info bg-info bg-opacity-10 border-info text-info mb-0">
+          <i class="bi bi-info-circle-fill me-2"></i> Two-factor authentication
+          provides an additional layer of protection for your VaultShare
+          account.
+        </div>
+      </div>
+      <!-- Footer -->
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

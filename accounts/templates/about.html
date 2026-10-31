@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} About Us | VaultShare {% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="position-relative overflow-hidden py-5" style="background: radial-gradient(120% 100% at 50% 0%, #0d1e30 0%, var(--vs-bg-dark) 80%); border-bottom: 1px solid var(--vs-border);">
+    <div class="container text-center text-white position-relative py-5" data-aos="fade-down">
+        <span class="badge bg-info bg-opacity-15 text-info border border-info border-opacity-30 rounded-pill px-3 py-2 mb-3 font-mono small">
+            <i class="bi bi-shield-lock-fill me-1"></i> ZERO-KNOWLEDGE ARCHITECTURE
+        </span>
+        <h1 class="display-4 fw-bold font-heading">About VaultShare</h1>
+        <p class="lead mt-3 text-info font-mono fw-semibold">
+            Secure. Share. Protect.
+        </p>
+        <p class="mx-auto fs-5 text-secondary font-mono" style="max-width:750px;">
+            VaultShare is an enterprise-grade encrypted file sharing platform designed to store, organize, and share documents safely while guaranteeing zero-knowledge confidentiality through AES-256 and RSA-2048 cryptography.
+        </p>
+    </div>
+</section>
+
+<!-- Our Story Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center g-5" data-aos="fade-up">
+
+            <div class="col-lg-6">
+                <div class="vs-glass-card p-4 text-center overflow-hidden position-relative">
+                    <div class="rounded-4 overflow-hidden border border-info border-opacity-25 bg-black bg-opacity-50 p-5">
+                        <i class="bi bi-shield-check display-1 text-info mb-3 d-block"></i>
+                        <h4 class="fw-bold text-white font-heading">VaultShare Security Core</h4>
+                        <p class="text-secondary font-mono small mb-0">End-to-End Cryptographic Envelope</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <span class="text-info font-mono small text-uppercase fw-bold">OUR PURPOSE</span>
+                <h2 class="display-6 fw-bold mb-3 mt-1 text-white font-heading">Who We Are</h2>
+
+                <p class="text-secondary fs-5">
+                    VaultShare was engineered to eliminate security risks in digital document distribution. Whether you're storing sensitive personal records, legal contracts, or corporate intelligence, our platform ensures your data remains completely private.
+                </p>
+
+                <p class="text-secondary fs-5">
+                    We pair high-assurance cryptographic primitives with a sleek, intuitive glassmorphic interface, giving users effortless control over link expiration, access revocation, and audit trails.
+                </p>
+
+                <div class="d-flex gap-4 mt-4 pt-2 border-top border-secondary border-opacity-25">
+                    <div>
+                        <h3 class="fw-bold text-info mb-0 font-heading">256-bit</h3>
+                        <small class="text-secondary font-mono">AES Encryption</small>
+                    </div>
+                    <div>
+                        <h3 class="fw-bold text-success mb-0 font-heading">100%</h3>
+                        <small class="text-secondary font-mono">Zero-Knowledge</small>
+                    </div>
+                    <div>
+                        <h3 class="fw-bold text-warning mb-0 font-heading">24/7</h3>
+                        <small class="text-secondary font-mono">Audit Streaming</small>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Mission Section -->
+<section class="py-5" style="background: rgba(11, 17, 32, 0.6); border-top: 1px solid var(--vs-border); border-bottom: 1px solid var(--vs-border);">
+    <div class="container text-center" data-aos="fade-up">
+        <div class="mx-auto bg-info bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mb-3 border border-info border-opacity-25" style="width:70px; height:70px;">
+            <i class="bi bi-bullseye text-info fs-2"></i>
+        </div>
+        <h2 class="fw-bold mb-3 text-white font-heading">Our Security Mission</h2>
+
+        <p class="text-secondary fs-5 mx-auto font-mono" style="max-width:820px;">
+            To deliver an uncompromised digital vault where indiviDuals, professionals, and enterprises can collaborate, transfer, and store critical assets without fear of unauthorized surveillance or data breaches.
+        </p>
+    </div>
+</section>
+
+<!-- Features Grid -->
+<section class="py-5">
+    <div class="container">
+
+        <div class="text-center mb-5" data-aos="fade-up">
+            <span class="text-info font-mono small text-uppercase fw-bold">PLATFORM CAPABILITIES</span>
+            <h2 class="display-6 fw-bold mt-1 text-white font-heading">Why Choose VaultShare?</h2>
+            <p class="text-secondary fs-5">
+                Everything required for high-assurance document governance.
+            </p>
+        </div>
+
+        <div class="row g-4" data-aos="fade-up">
+
+            <div class="col-md-6 col-lg-4">
+                <div class="vs-glass-card h-100 p-4 text-center">
+                    <div class="mx-auto bg-info bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mb-3 border border-info border-opacity-25" style="width:65px; height:65px;">
+                        <i class="bi bi-lock-fill text-info fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold text-white font-heading">Encrypted Storage</h5>
+                    <p class="text-secondary small font-mono mb-0">
+                        Files are encrypted client-side or on ingestion with AES-256 before disk persistence.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="vs-glass-card h-100 p-4 text-center">
+                    <div class="mx-auto bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mb-3 border border-warning border-opacity-25" style="width:65px; height:65px;">
+                        <i class="bi bi-folder-fill text-warning fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold text-white font-heading">Directory Vaults</h5>
+                    <p class="text-secondary small font-mono mb-0">
+                        Organize documents into custom isolated directory structures for rapid navigation.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="vs-glass-card h-100 p-4 text-center">
+                    <div class="mx-auto bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mb-3 border border-success border-opacity-25" style="width:65px; height:65px;">
+                        <i class="bi bi-people-fill text-success fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold text-white font-heading">Controlled Sharing</h5>
+                    <p class="text-secondary small font-mono mb-0">
+                        Grant granular view or download permissions with automatic link expiration.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="vs-glass-card h-100 p-4 text-center">
+                    <div class="mx-auto bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mb-3 border border-primary border-opacity-25" style="width:65px; height:65px;">
+                        <i class="bi bi-lightning-charge-fill text-primary fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold text-white font-heading">High-Speed Transfers</h5>
+                    <p class="text-secondary small font-mono mb-0">
+                        Streamlined streaming file encryption &amp; decryption engine for fast downloads.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="vs-glass-card h-100 p-4 text-center">
+                    <div class="mx-auto bg-rose bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mb-3 border border-rose border-opacity-25" style="width:65px; height:65px;">
+                        <i class="bi bi-shield-check text-rose fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold text-white font-heading">Tamper Integrity</h5>
+                    <p class="text-secondary small font-mono mb-0">
+                        SHA-256 integrity verification blocks tampered or corrupted files automatically.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="vs-glass-card h-100 p-4 text-center">
+                    <div class="mx-auto bg-info bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mb-3 border border-info border-opacity-25" style="width:65px; height:65px;">
+                        <i class="bi bi-clock-history text-info fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold text-white font-heading">Audit Trail</h5>
+                    <p class="text-secondary small font-mono mb-0">
+                        Real-time logging of login events, share link generations, and file downloads.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5">
+    <div class="container">
+        <div class="vs-glass-card p-5 text-center position-relative overflow-hidden" data-aos="fade-up">
+            <div class="position-absolute top-0 start-0 w-100 bg-info" style="height: 3px;"></div>
+            <h2 class="fw-bold text-white font-heading mb-2">Ready to Secure Your Digital Vault?</h2>
+
+            <p class="text-secondary font-mono fs-5 mb-4 mx-auto" style="max-width: 600px;">
+                Experience military-grade encryption with seamless file sharing today.
+            </p>
+
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <a href="{% url 'signup' %}" class="btn btn-vs-cyan btn-lg px-4 font-mono">
+                    <i class="bi bi-rocket-takeoff-fill me-2"></i>Create Free Account
+                </a>
+
+                <button class="btn btn-vs-outline btn-lg px-4 font-mono" data-bs-toggle="modal" data-bs-target="#contactModal">
+                    <i class="bi bi-envelope-fill me-2"></i>Contact Support
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

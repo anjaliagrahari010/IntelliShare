@@ -1,0 +1,270 @@
+/* ==========================================================================
+   VaultShare - Enterprise Encrypted Storage & Sharing Design System
+   Aesthetics: Dark Cyber Security, Glassmorphism, Dynamic Micro-Interactions
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+  --vs-bg-dark: #060913;
+  --vs-bg-darker: #03050c;
+  --vs-surface-1: #0b1120;
+  --vs-surface-2: #111a2e;
+  --vs-surface-card: rgba(17, 26, 46, 0.75);
+  --vs-surface-card-hover: rgba(22, 34, 60, 0.85);
+  --vs-cyan: #22d3ee;
+  --vs-cyan-glow: rgba(34, 211, 238, 0.25);
+  --vs-blue: #38bdf8;
+  --vs-emerald: #10b981;
+  --vs-purple: #a855f7;
+  --vs-danger: #ef4444;
+  --vs-warning: #f59e0b;
+  --vs-text-main: #f8fafc;
+  --vs-text-muted: #94a3b8;
+  --vs-border: rgba(148, 163, 184, 0.14);
+  --vs-border-glow: rgba(34, 211, 238, 0.35);
+  --vs-font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --vs-font-heading: 'Space Grotesk', sans-serif;
+  --vs-font-mono: 'JetBrains Mono', monospace;
+}
+
+/* Global Reset & Base Styling */
+body {
+  background-color: var(--vs-bg-dark);
+  font-family: var(--vs-font-body);
+  color: var(--vs-text-main);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--vs-bg-darker);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--vs-cyan);
+}
+
+/* Typography Utilities */
+.font-mono {
+  font-family: var(--vs-font-mono) !important;
+}
+
+.font-heading {
+  font-family: var(--vs-font-heading) !important;
+}
+
+.vs-gradient-text {
+  background: linear-gradient(135deg, #a5f3fc 0%, #22d3ee 45%, #38bdf8 70%, #818cf8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.vs-gradient-emerald {
+  background: linear-gradient(135deg, #6ee7b7 0%, #10b981 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Glassmorphism Cards & Panels */
+.vs-glass-card {
+  background: var(--vs-surface-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--vs-border);
+  border-radius: 1rem;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.vs-glass-card:hover {
+  border-color: var(--vs-border-glow);
+  box-shadow: 0 16px 36px -12px rgba(34, 211, 238, 0.18);
+}
+
+.vs-glow-ring {
+  box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.2),
+              0 0 50px -10px rgba(34, 211, 238, 0.25),
+              inset 0 0 30px rgba(34, 211, 238, 0.05);
+  border-radius: 1.5rem;
+}
+
+/* Live Status Pulse Indicator */
+.vs-status-pulse {
+  width: 8px;
+  height: 8px;
+  background-color: var(--vs-emerald);
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 10px var(--vs-emerald);
+  animation: vs-pulse 2s infinite;
+}
+
+@keyframes vs-pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* Terminal & Console Windows */
+.vs-terminal {
+  background: #040711;
+  border: 1px solid rgba(34, 211, 238, 0.2);
+  border-radius: 0.85rem;
+  font-family: var(--vs-font-mono);
+  font-size: 0.82rem;
+  color: #a7f3d0;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+}
+
+/* Icon Box Containers */
+.vs-icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 0.85rem;
+  background: rgba(34, 211, 238, 0.08);
+  border: 1px solid rgba(34, 211, 238, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--vs-cyan);
+  font-size: 1.4rem;
+  transition: all 0.3s ease;
+}
+
+.vs-glass-card:hover .vs-icon-box {
+  background: rgba(34, 211, 238, 0.16);
+  transform: scale(1.08);
+}
+
+/* Buttons System */
+.btn-vs-cyan {
+  background: linear-gradient(135deg, #22d3ee 0%, #0284c7 100%);
+  color: #04131a !important;
+  font-weight: 700;
+  border: none;
+  box-shadow: 0 4px 20px rgba(34, 211, 238, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-vs-cyan:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(34, 211, 238, 0.5);
+  color: #000 !important;
+}
+
+.btn-vs-outline {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  color: var(--vs-text-main);
+  backdrop-filter: blur(8px);
+  transition: all 0.25s ease;
+}
+
+.btn-vs-outline:hover {
+  border-color: var(--vs-cyan);
+  color: var(--vs-cyan);
+  transform: translateY(-2px);
+  background: rgba(34, 211, 238, 0.08);
+}
+
+.btn-vs-danger {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+  transition: all 0.25s ease;
+}
+
+.btn-vs-danger:hover {
+  background: rgba(239, 68, 68, 0.9);
+  color: #fff !important;
+  box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4);
+}
+
+/* Custom Interactive File Drag & Drop Zone */
+.vs-dropzone {
+  border: 2px dashed rgba(34, 211, 238, 0.3);
+  background: rgba(11, 17, 32, 0.6);
+  border-radius: 1.25rem;
+  padding: 2.5rem 1.5rem;
+  text-center: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.vs-dropzone:hover, .vs-dropzone.dragover {
+  border-color: var(--vs-cyan);
+  background: rgba(34, 211, 238, 0.08);
+  box-shadow: 0 0 30px rgba(34, 211, 238, 0.15);
+}
+
+/* Forms & Inputs */
+.form-control, .form-select {
+  background-color: #040711 !important;
+  border: 1px solid rgba(148, 163, 184, 0.2) !important;
+  color: var(--vs-text-main) !important;
+  border-radius: 0.65rem;
+  padding: 0.65rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--vs-cyan) !important;
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.15) !important;
+}
+
+.input-group-text {
+  background-color: #040711 !important;
+  border: 1px solid rgba(148, 163, 184, 0.2) !important;
+  color: var(--vs-text-muted) !important;
+}
+
+/* Badges */
+.badge {
+  font-family: var(--vs-font-mono);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  padding: 0.35em 0.75em;
+  border-radius: 0.4rem;
+}
+
+/* Table Styling */
+.table-dark {
+  --bs-table-bg: transparent;
+  --bs-table-hover-bg: rgba(34, 211, 238, 0.04);
+  color: var(--vs-text-main);
+}
+
+.table-dark th {
+  border-bottom-color: rgba(148, 163, 184, 0.15);
+  font-family: var(--vs-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vs-text-muted);
+}
+
+.table-dark td {
+  border-bottom-color: rgba(148, 163, 184, 0.08);
+}
+
+/* Keyframes */
+@keyframes spinRing {
+  to { transform: rotate(360deg); }
+}
+
+/* Navbar & Sidebar active link indicator */
+.vs-nav-active {
+  background: rgba(34, 211, 238, 0.15) !important;
+  color: var(--vs-cyan) !important;
+  border-left: 3px solid var(--vs-cyan);
+}

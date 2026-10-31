@@ -1,0 +1,177 @@
+{% extends "dashboard.html" %}
+
+{% block title %} Upload Secure File | VaultShare {% endblock %}
+
+{% block content %}
+
+<div class="container-fluid p-0">
+
+    <!-- Header Banner -->
+    <div class="d-flex justify-content-between align-items-center mb-4 gap-3" data-aos="fade-down">
+        <div>
+            <div class="d-inline-flex align-items-center gap-2 px-3 py-1 mb-2 rounded-pill bg-info bg-opacity-10 border border-info border-opacity-25 text-info font-mono small">
+                <span class="vs-status-pulse"></span>
+                <span>ZERO-KNOWLEDGE ENCRYPTION VAULT</span>
+            </div>
+            <h2 class="display-6 fw-bold text-white mb-1 font-heading">
+                <i class="bi bi-cloud-upload-fill text-info me-2"></i>Upload &amp; Encrypt File
+            </h2>
+            <p class="text-secondary mb-0 font-mono small">
+                Files uploaded here are instantly encrypted on disk using AES-256 / Dual-Layer RSA cryptography before storage.
+            </p>
+        </div>
+
+        <a href="{% url 'myfiles' %}" class="btn btn-vs-outline font-mono small px-3 py-2">
+            <i class="bi bi-arrow-left me-1.5"></i>Back to My Files
+        </a>
+    </div>
+
+    <!-- Upload Card -->
+    <div class="row justify-content-center" data-aos="fade-up">
+        <div class="col-lg-8">
+            <div class="vs-glass-card p-4 p-md-5">
+
+                <form method="POST" action="{% url 'upload_file' %}" enctype="multipart/form-data" id="mainUploadForm">
+                    {% csrf_token %}
+
+                    <!-- Drag & Drop Zone -->
+                    <div class="mb-4">
+                        <label class="form-label font-mono small text-info text-uppercase fw-semibold mb-2">SELECT OR DROP FILE</label>
+                        <div class="vs-dropzone position-relative" id="dropZone">
+                            <input type="file" name="file" id="fileInput" class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer" style="cursor: pointer; z-index: 10;" required>
+
+                            <div id="dropZoneContent">
+                                <div class="rounded-circle bg-info bg-opacity-10 text-info d-inline-flex align-items-center justify-content-center p-3.5 mb-3 border border-info border-opacity-25" style="width: 70px; height: 70px;">
+                                    <i class="bi bi-cloud-arrow-up-fill fs-2"></i>
+                                </div>
+                                <h5 class="fw-bold text-white font-heading mb-1">Drag and drop your file here</h5>
+                                <p class="text-secondary font-mono small mb-2">or <span class="text-info underline">browse local machine</span></p>
+                                <span class="badge bg-secondary bg-opacity-25 text-secondary border border-secondary font-mono small">
+                                    Supports all file formats &middot; Zero-Knowledge Encrypted
+                                </span>
+                            </div>
+
+                            <div id="fileSelectedPreview" class="d-none py-2">
+                                <i class="bi bi-file-earmark-check-fill display-4 text-success mb-2"></i>
+                                <h5 class="fw-bold text-white font-mono mb-1" id="fileNameDisplay">filename.ext</h5>
+                                <span class="badge bg-success bg-opacity-25 text-success border border-success font-mono" id="fileSizeDisplay">0 KB</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <!-- Target Folder -->
+                        <div class="col-md-6">
+                            <label class="form-label font-mono small text-info text-uppercase fw-semibold">ASSIGN TO FOLDER</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-black border-secondary text-secondary">
+                                    <i class="bi bi-folder-fill"></i>
+                                </span>
+                                <select name="folder" class="form-select bg-black border-secondary text-light font-mono small">
+                                    <option value="">Root Folder (No Folder)</option>
+                                    {% for folder in folders %}
+                                        <option value="{{ folder.id }}">{{ folder.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Expiry -->
+                        <div class="col-md-6">
+                            <label class="form-label font-mono small text-info text-uppercase fw-semibold">LINK EXPIRATION</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-black border-secondary text-secondary">
+                                    <i class="bi bi-clock-history"></i>
+                                </span>
+                                <select name="expiry" class="form-select bg-black border-secondary text-light font-mono small">
+                                    <option value="10">10 Minutes</option>
+                                    <option value="30">30 Minutes</option>
+                                    <option value="60" selected>1 Hour</option>
+                                    <option value="1440">24 Hours</option>
+                                    <option value="10080">7 Days</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Encryption Method Selection -->
+                    <div class="mb-4">
+                        <label class="form-label font-mono small text-info text-uppercase fw-semibold mb-2">ENCRYPTION PROTOCOL</label>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="vs-glass-card p-3 d-flex align-items-start gap-3 w-100 bg-black bg-opacity-40 cursor-pointer">
+                                    <input type="radio" name="encryption_type" value="AES256" checked class="form-check-input mt-1">
+                                    <div>
+                                        <div class="fw-bold text-white font-mono small mb-0.5">
+                                            <i class="bi bi-shield-lock-fill text-success me-1"></i>AES-256 Single Layer
+                                        </div>
+                                        <small class="text-secondary d-block" style="font-size: 0.78rem;">High-performance military-grade symmetric cipher encryption.</small>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="vs-glass-card p-3 d-flex align-items-start gap-3 w-100 bg-black bg-opacity-40 cursor-pointer">
+                                    <input type="radio" name="encryption_type" value="Dual" class="form-check-input mt-1">
+                                    <div>
+                                        <div class="fw-bold text-white font-mono small mb-0.5">
+                                            <i class="bi bi-layers-fill text-info me-1"></i>Dual Layer (RSA + AES)
+                                        </div>
+                                        <small class="text-secondary d-block" style="font-size: 0.78rem;">Asymmetric 2048-bit RSA key encapsulation over AES payload.</small>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="pt-2">
+                        <button type="submit" class="btn btn-vs-cyan btn-lg w-100 py-3 font-mono text-uppercase fw-bold">
+                            <i class="bi bi-shield-lock-fill me-2"></i>Encrypt &amp; Upload File to Vault
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const fileInput = document.getElementById('fileInput');
+    const dropZone = document.getElementById('dropZone');
+    const dropContent = document.getElementById('dropZoneContent');
+    const previewContent = document.getElementById('fileSelectedPreview');
+    const nameDisplay = document.getElementById('fileNameDisplay');
+    const sizeDisplay = document.getElementById('fileSizeDisplay');
+
+    fileInput.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            const file = this.files[0];
+            nameDisplay.textContent = file.name;
+            sizeDisplay.textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+            dropContent.classList.add('d-none');
+            previewContent.classList.remove('d-none');
+            dropZone.classList.add('border-info');
+        }
+    });
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+        }, false);
+    });
+</script>
+
+{% endblock %}

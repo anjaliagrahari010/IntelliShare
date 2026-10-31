@@ -1,0 +1,215 @@
+{% extends "dashboard.html" %}
+
+{% block title %} 
+Security AI | VaultShare
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3"
+         data-aos="fade-down">
+        <div>
+            <div class="d-inline-flex align-items-center gap-2 px-3 py-1 mb-2 rounded-pill bg-info bg-opacity-10 border border-info border-opacity-25 text-info font-mono small">
+                <span class="vs-status-pulse"></span>
+                <span>INTELLIGENT THREAT MONITORING</span>
+            </div>
+
+            <h2 class="display-6 fw-bold text-white mb-1 font-heading">
+                <i class="bi bi-shield-lock-fill text-info me-2"></i>
+                Security AI Dashboard
+            </h2>
+
+            <p class="text-secondary mb-0 font-mono small">
+                Monitor suspicious activity, anomaly scores and security incidents.
+            </p>
+        </div>
+
+        <a href="{% url 'user_dashboard' %}" class="btn btn-vs-outline">
+            <i class="bi bi-arrow-left me-1"></i>Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-3 mb-4" data-aos="fade-up">
+        <div class="col-12 col-sm-6 col-xl">
+            <div class="vs-glass-card h-100 p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-secondary small font-mono">TOTAL INCIDENTS</span>
+                    <i class="bi bi-shield-exclamation text-info fs-4"></i>
+                </div>
+                <h2 class="fw-bold text-white mt-3 mb-0">{{ total_incidents }}</h2>
+                <small class="text-secondary">Recorded security incidents</small>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl">
+            <div class="vs-glass-card h-100 p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-secondary small font-mono">CRITICAL</span>
+                    <i class="bi bi-exclamation-octagon-fill text-danger fs-4"></i>
+                </div>
+                <h2 class="fw-bold text-danger mt-3 mb-0">{{ critical_count }}</h2>
+                <small class="text-secondary">Critical severity</small>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl">
+            <div class="vs-glass-card h-100 p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-secondary small font-mono">HIGH RISK</span>
+                    <i class="bi bi-exclamation-triangle-fill text-warning fs-4"></i>
+                </div>
+                <h2 class="fw-bold text-warning mt-3 mb-0">{{ high_count }}</h2>
+                <small class="text-secondary">High severity</small>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl">
+            <div class="vs-glass-card h-100 p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-secondary small font-mono">MEDIUM RISK</span>
+                    <i class="bi bi-activity text-info fs-4"></i>
+                </div>
+                <h2 class="fw-bold text-info mt-3 mb-0">{{ medium_count }}</h2>
+                <small class="text-secondary">Medium severity</small>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl">
+            <div class="vs-glass-card h-100 p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-secondary small font-mono">OPEN</span>
+                    <i class="bi bi-hourglass-split text-info fs-4"></i>
+                </div>
+                <h2 class="fw-bold text-white mt-3 mb-0">{{ open_count }}</h2>
+                <small class="text-secondary">Awaiting investigation</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Incident Table -->
+    <div class="vs-glass-card overflow-hidden" data-aos="fade-up">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 p-3 border-bottom border-secondary border-opacity-25">
+            <div>
+                <h5 class="fw-bold text-white mb-1 font-heading">
+                    <i class="bi bi-list-ul text-info me-2"></i>Security Incidents
+                </h5>
+                <p class="text-secondary small font-mono mb-0">
+                    Review detected threats and anomaly activity.
+                </p>
+            </div>
+
+            <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-3 py-2">
+                {{ total_incidents }} recorded
+            </span>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle mb-0"
+                   style="--bs-table-bg: transparent;">
+                <thead>
+                    <tr class="text-secondary font-mono small border-bottom border-secondary border-opacity-25"
+                        style="font-size: 0.75rem;">
+                        <th class="ps-4 py-3">INCIDENT</th>
+                        <th class="py-3">SEVERITY</th>
+                        <th class="py-3">RISK SCORE</th>
+                        <th class="py-3">ML ANOMALY</th>
+                        <th class="py-3">RULE SCORE</th>
+                        <th class="py-3">STATUS</th>
+                        <th class="py-3">DETECTED AT</th>
+                        <th class="pe-4 py-3 text-end">ACTION</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for incident in incidents %}
+                    <tr class="vs-log-row">
+                        <td class="ps-4 py-3">
+                            <span class="text-white fw-semibold small d-block">
+                                {{ incident.get_incident_type_display|default:incident.incident_type }}
+                            </span>
+                            <small class="text-secondary font-mono">
+                                Incident #{{ incident.id }}
+                            </small>
+                        </td>
+
+                        <td class="py-3">
+                            {% if incident.severity == "CRITICAL" %}
+                                <span class="badge bg-danger text-white">CRITICAL</span>
+                            {% elif incident.severity == "HIGH" %}
+                                <span class="badge bg-warning text-dark">HIGH</span>
+                            {% elif incident.severity == "MEDIUM" %}
+                                <span class="badge bg-info text-dark">MEDIUM</span>
+                            {% else %}
+                                <span class="badge bg-secondary text-white">
+                                    {{ incident.get_severity_display|default:incident.severity }}
+                                </span>
+                            {% endif %}
+                        </td>
+
+                        <td class="py-3">
+                            <span class="fw-bold {% if incident.risk_score >= 80 %}text-danger{% elif incident.risk_score >= 60 %}text-warning{% else %}text-info{% endif %}">
+                                {{ incident.risk_score }}/100
+                            </span>
+                        </td>
+
+                        <td class="py-3 text-light font-mono small">
+                            {{ incident.anomaly_score|floatformat:3 }}
+                        </td>
+
+                        <td class="py-3 text-light font-mono small">
+                            {{ incident.rule_score|floatformat:1 }}
+                        </td>
+
+                        <td class="py-3">
+                            {% if incident.status == "OPEN" %}
+                                <span class="badge bg-danger bg-opacity-25 text-light border border-danger border-opacity-25">OPEN</span>
+                            {% elif incident.status == "INVESTIGATING" %}
+                                <span class="badge bg-warning text-dark">INVESTIGATING</span>
+                            {% elif incident.status == "RESOLVED" %}
+                                <span class="badge bg-success bg-opacity-25 text-light border border-success border-opacity-25">RESOLVED</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ incident.get_status_display|default:incident.status }}</span>
+                            {% endif %}
+                        </td>
+
+                        <td class="py-3 text-secondary font-mono small">
+                            {{ incident.created_at|date:"d M Y, H:i" }}
+                        </td>
+
+                        <td class="pe-4 py-3 text-end">
+                            <a href="{% url 'security_ai:incident_detail' incident.id %}"
+                               class="btn btn-vs-outline btn-sm">
+                                <i class="bi bi-eye me-1"></i>View
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center py-5">
+                            <div class="d-inline-flex p-4 rounded-circle bg-secondary bg-opacity-10 mb-3 text-info opacity-75">
+                                <i class="bi bi-shield-check display-4"></i>
+                            </div>
+                            <h5 class="fw-bold text-white mb-1 font-heading">
+                                No Security Incidents
+                            </h5>
+                            <p class="text-secondary small font-mono mb-0">
+                                No incidents have been recorded for your account.
+                            </p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <p class="text-secondary font-mono small mt-3 mb-0">
+        <i class="bi bi-info-circle me-1 text-info"></i>
+        Risk scores are application-generated indicators and should be reviewed with the incident evidence.
+    </p>
+
+</div>
+{% endblock %}

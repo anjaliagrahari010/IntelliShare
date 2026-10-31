@@ -1,0 +1,81 @@
+{% extends "dashboard.html" %}
+
+{% block title %} Notifications | VaultShare {% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- Header Section -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3" data-aos="fade-down">
+        <div>
+            <div class="d-inline-flex align-items-center gap-2 px-3 py-1 mb-2 rounded-pill bg-info bg-opacity-10 border border-info border-opacity-25 text-info font-mono small">
+                <span class="vs-status-pulse"></span>
+                <span>SECURITY &amp; SYSTEM ALERTS</span>
+            </div>
+            <h2 class="display-6 fw-bold text-white mb-1 font-heading">
+                <i class="bi bi-bell-fill text-info me-2"></i>Notifications Stream
+            </h2>
+            <p class="text-secondary mb-0 font-mono small">
+                Live security notifications, access requests, and file sharing activity logs.
+            </p>
+        </div>
+
+        {% if notification %}
+        <form method="POST" action="{% url 'delete_all_notification' %}" onsubmit="return confirm('Clear all notifications?');">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger btn-sm font-mono">
+                <i class="bi bi-trash3-fill me-1"></i>Clear All Notifications
+            </button>
+        </form>
+        {% endif %}
+    </div>
+
+    <!-- Notification List Container -->
+    <div class="row justify-content-center" data-aos="fade-up">
+        <div class="col-lg-10">
+
+            {% if notification %}
+                <div class="d-flex flex-column gap-3">
+                    {% for item in notification %}
+                    <div class="vs-glass-card p-4 position-relative overflow-hidden">
+                        <div class="position-absolute top-0 start-0 h-100 bg-info" style="width: 4px;"></div>
+
+                        <div class="d-flex w-100 justify-content-between align-items-start gap-3 flex-wrap">
+                            <div class="d-flex align-items-center gap-2.5">
+                                <div class="rounded-circle bg-info bg-opacity-10 text-info d-flex align-items-center justify-content-center" style="width:42px;height:42px;">
+                                    <i class="bi bi-bell-fill fs-5"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold text-white font-heading mb-0">{{ item.title }}</h5>
+                                    <span class="text-secondary font-mono small opacity-75">
+                                        <i class="bi bi-clock me-1"></i>{{ item.created_at|date:"d M Y, H:i A" }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3 ps-5">
+                            <p class="mb-0 text-light font-mono small bg-black bg-opacity-40 p-3 rounded-3 border border-secondary border-opacity-25">
+                                {{ item.message }}
+                            </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="vs-glass-card p-5 text-center">
+                    <div class="d-inline-flex p-4 rounded-circle bg-secondary bg-opacity-10 mb-3 text-info opacity-75">
+                        <i class="bi bi-bell-slash-fill display-4"></i>
+                    </div>
+                    <h4 class="fw-bold text-white font-heading mb-1">No Notifications</h4>
+                    <p class="text-secondary small font-mono mb-0">Your notification inbox is clean. New alerts will appear here automatically.</p>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

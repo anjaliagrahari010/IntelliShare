@@ -1,0 +1,130 @@
+{% extends "dashboard.html" %}
+
+{% block title %} My Folders | VaultShare {% endblock %}
+
+{% block content %}
+
+<div class="container-fluid p-0">
+
+    <!-- Header Section -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3" data-aos="fade-down">
+        <div>
+            <div class="d-inline-flex align-items-center gap-2 px-3 py-1 mb-2 rounded-pill bg-warning bg-opacity-10 border border-warning border-opacity-25 text-warning font-mono small">
+                <span class="vs-status-pulse bg-warning" style="box-shadow: 0 0 10px #f59e0b;"></span>
+                <span>DIRECTORY MANAGEMENT</span>
+            </div>
+            <h2 class="display-6 fw-bold text-white mb-1 font-heading">
+                <i class="bi bi-folder2-open text-warning me-2"></i>My Encrypted Folders
+            </h2>
+            <p class="text-secondary mb-0 font-mono small">
+                Organize your encrypted files into isolated directory vaults.
+            </p>
+        </div>
+
+        <button class="btn btn-vs-cyan font-mono small px-3 py-2" data-bs-toggle="modal" data-bs-target="#createFolderModal">
+            <i class="bi bi-folder-plus me-1.5"></i>New Folder
+        </button>
+    </div>
+
+    <!-- Folder Cards Grid -->
+    <div class="row g-4" data-aos="fade-up">
+
+        {% for folder in folders %}
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="vs-glass-card h-100 p-4 d-flex flex-column justify-content-between position-relative overflow-hidden">
+                <div class="position-absolute top-0 start-0 w-100 bg-warning" style="height: 3px; opacity: 0.7;"></div>
+
+                <div class="text-center pt-2 pb-3">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-4 bg-warning bg-opacity-10 p-3 mb-3 border border-warning border-opacity-25" style="width: 76px; height: 76px;">
+                        <i class="bi bi-folder-fill text-warning fs-1"></i>
+                    </div>
+
+                    <h5 class="fw-bold text-white font-heading mb-1 text-truncate" title="{{ folder.name }}">
+                        {{ folder.name }}
+                    </h5>
+
+                    <span class="badge bg-warning bg-opacity-15 text-warning border border-warning border-opacity-30 font-mono mb-2">
+                        <i class="bi bi-file-earmark-lock me-1"></i>{{ folder.files.count }} File{{ folder.files.count|pluralize }}
+                    </span>
+
+                    <div class="text-secondary font-mono small opacity-75" style="font-size: 0.75rem;">
+                        <i class="bi bi-calendar3 me-1"></i>Created {{ folder.created_at|date:"d M Y" }}
+                    </div>
+                </div>
+
+                <div class="pt-3 border-top border-secondary border-opacity-25 d-flex gap-2">
+                    <a href="{% url 'folder_detail' folder.id %}" class="btn btn-vs-cyan flex-grow-1 btn-sm font-mono">
+                        <i class="bi bi-folder2-open me-1"></i>Open Vault
+                    </a>
+
+                    <a href="{% url 'delete_folder' folder.id %}"
+                       class="btn btn-outline-danger btn-sm"
+                       title="Delete Folder"
+                       onclick="return confirm('Delete folder {{ folder.name }} and all its contents?');">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="vs-glass-card p-5 text-center">
+                <div class="d-inline-flex p-4 rounded-circle bg-secondary bg-opacity-10 mb-3 text-warning opacity-75">
+                    <i class="bi bi-folder-x display-3"></i>
+                </div>
+                <h4 class="fw-bold text-white font-heading mb-2">No Folders Created Yet</h4>
+                <p class="text-secondary font-mono small mb-4 mx-auto" style="max-width: 420px;">
+                    Keep your vault organized by creating custom directory folders.
+                </p>
+                <button class="btn btn-vs-cyan font-mono" data-bs-toggle="modal" data-bs-target="#createFolderModal">
+                    <i class="bi bi-folder-plus me-1"></i>Create First Folder
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<!-- Create Folder Modal -->
+<div class="modal fade" id="createFolderModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border border-warning border-opacity-25 shadow-lg" style="background: rgba(11, 17, 32, 0.98);">
+
+            <form method="POST" action="{% url 'create_folder' %}">
+                {% csrf_token %}
+
+                <div class="modal-header border-secondary border-opacity-25">
+                    <h5 class="modal-title font-heading text-warning d-flex align-items-center gap-2">
+                        <i class="bi bi-folder-plus text-warning"></i>Create New Folder Vault
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label font-mono small text-warning text-uppercase fw-semibold">FOLDER NAME</label>
+                        <input type="text"
+                               name="folder_name"
+                               class="form-control bg-black border-secondary text-light font-mono"
+                               placeholder="e.g. Confidential Reports, Legal Documents"
+                               required
+                               autofocus>
+                    </div>
+                </div>
+
+                <div class="modal-footer border-secondary border-opacity-25">
+                    <button type="button" class="btn btn-outline-secondary font-mono small" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning font-mono small px-4 text-dark fw-bold">
+                        <i class="bi bi-folder-plus me-1"></i>Create Folder
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %} Verify OTP | VaultShare {% endblock %}
+
+{% block content %}
+<section class="py-5 d-flex align-items-center min-vh-100" style="background: radial-gradient(120% 100% at 50% 0%, #0d1e30 0%, var(--vs-bg-dark) 70%);">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-11 col-sm-8 col-md-6 col-lg-5" data-aos="fade-up">
+
+                <div class="vs-glass-card p-4 p-md-5">
+
+                    <div class="text-center mb-4">
+                        <div class="rounded-circle border border-info border-opacity-50 bg-info bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3 shadow-lg" style="width:76px;height:76px;">
+                            <i class="bi bi-shield-lock-fill text-info display-6"></i>
+                        </div>
+                        <h3 class="fw-bold text-white font-heading mb-1">Two-Factor Authentication</h3>
+                        <p class="text-secondary font-mono small mb-0">Enter the 6-digit security OTP dispatched to your verified email address</p>
+                    </div>
+
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-info bg-info bg-opacity-10 border-info text-info font-mono small py-2 text-center rounded-3 mb-4" role="alert">
+                                <i class="bi bi-info-circle-fill me-1"></i>{{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="mb-4">
+                            <label for="otp" class="vs-form-label d-block text-center mb-2">VERIFICATION CODE</label>
+                            <input
+                                type="text"
+                                name="otp"
+                                id="otp"
+                                class="form-control form-control-lg text-center font-mono fs-2 tracking-widest text-info bg-black border-secondary"
+                                maxlength="6"
+                                inputmode="numeric"
+                                pattern="[0-9]*"
+                                placeholder="••••••"
+                                autocomplete="one-time-code"
+                                style="letter-spacing: 0.3em; font-weight: 700;"
+                                required
+                                autofocus
+                            >
+                        </div>
+
+                        <button type="submit" class="btn btn-vs-cyan btn-lg w-100 py-3 font-mono text-uppercase fw-bold">
+                            <i class="bi bi-shield-check me-2"></i>Authenticate &amp; Unlock Vault
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-4 pt-2 border-top border-secondary border-opacity-25">
+                        <small class="text-secondary font-mono">
+                            Didn't receive the code?
+                            <a href="{% url 'login' %}" class="text-info text-decoration-none fw-semibold ms-1">Back to Login</a>
+                        </small>
+                    </div>
+
+                </div>
+
+                <div class="text-center mt-3 font-mono small text-secondary">
+                    <i class="bi bi-lock-fill text-success me-1"></i>Secured via VaultShare Multi-Factor Protocol
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

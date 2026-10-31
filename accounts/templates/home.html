@@ -1,0 +1,656 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Home | VaultShare
+{% endblock %}
+
+{% block content %}
+{% load static %}
+
+<!-- External Google Fonts for Modern Security Aesthetic -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --vs-bg-dark: #060913;
+    --vs-surface-1: #0b1120;
+    --vs-surface-2: #111a2e;
+    --vs-surface-card: rgba(17, 26, 46, 0.75);
+    --vs-cyan: #22d3ee;
+    --vs-cyan-glow: rgba(34, 211, 238, 0.25);
+    --vs-blue: #38bdf8;
+    --vs-emerald: #10b981;
+    --vs-purple: #a855f7;
+    --vs-text-main: #f8fafc;
+    --vs-text-muted: #94a3b8;
+    --vs-border: rgba(148, 163, 184, 0.12);
+    --vs-border-glow: rgba(34, 211, 238, 0.35);
+  }
+
+  body {
+    background-color: var(--vs-bg-dark);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--vs-text-main);
+    overflow-x: hidden;
+  }
+
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace !important;
+  }
+
+  .font-heading {
+    font-family: 'Space Grotesk', sans-serif !important;
+  }
+
+  /* Glows & Gradients */
+  .vs-gradient-text {
+    background: linear-gradient(135deg, #a5f3fc 0%, #22d3ee 45%, #38bdf8 70%, #818cf8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .vs-glow-ring {
+    box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.2),
+                0 0 50px -10px rgba(34, 211, 238, 0.25),
+                inset 0 0 30px rgba(34, 211, 238, 0.05);
+    border-radius: 1.5rem;
+  }
+
+  .vs-glass-card {
+    background: var(--vs-surface-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--vs-border);
+    border-radius: 1rem;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .vs-glass-card:hover {
+    border-color: var(--vs-border-glow);
+    transform: translateY(-5px);
+    box-shadow: 0 16px 36px -12px rgba(34, 211, 238, 0.2);
+  }
+
+  /* Live Pulse Indicator */
+  .vs-status-pulse {
+    width: 8px;
+    height: 8px;
+    background-color: var(--vs-emerald);
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 10px var(--vs-emerald);
+    animation: vs-pulse 2s infinite;
+  }
+
+  @keyframes vs-pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  }
+
+  /* Interactive Hero Card Toggle */
+  .vs-tab-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--vs-text-muted);
+    padding: 0.4rem 0.9rem;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    font-family: 'JetBrains Mono', monospace;
+    transition: all 0.2s ease;
+  }
+
+  .vs-tab-btn.active {
+    background: rgba(34, 211, 238, 0.12);
+    border-color: rgba(34, 211, 238, 0.3);
+    color: var(--vs-cyan);
+  }
+
+  .vs-icon-box {
+    width: 54px;
+    height: 54px;
+    border-radius: 0.85rem;
+    background: rgba(34, 211, 238, 0.08);
+    border: 1px solid rgba(34, 211, 238, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--vs-cyan);
+    font-size: 1.4rem;
+  }
+
+  .vs-flow-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--vs-cyan);
+    background: rgba(34, 211, 238, 0.1);
+    border: 1px solid rgba(34, 211, 238, 0.3);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .vs-cta-band {
+    background: radial-gradient(120% 140% at 50% 0%, #090b16 0%, var(--vs-bg-dark) 80%);
+    border-top: 1px solid rgba(34, 211, 238, 0.15);
+  }
+
+  /* Custom Buttons */
+  .btn-vs-cyan {
+    background: linear-gradient(135deg, #22d3ee 0%, #0284c7 100%);
+    color: #04131a !important;
+    font-weight: 700;
+    border: none;
+    box-shadow: 0 4px 20px rgba(34, 211, 238, 0.35);
+    transition: all 0.25s ease;
+  }
+
+  .btn-vs-cyan:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(34, 211, 238, 0.5);
+    color: #000 !important;
+  }
+
+  .btn-vs-outline {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    color: var(--vs-text-main);
+    backdrop-filter: blur(8px);
+    transition: all 0.25s ease;
+  }
+
+  .btn-vs-outline:hover {
+    border-color: var(--vs-cyan);
+    color: var(--vs-cyan);
+    transform: translateY(-2px);
+    background: rgba(34, 211, 238, 0.08);
+  }
+
+  /* Security Metrics Numbers */
+  .vs-metric-val {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #ffffff, var(--vs-cyan));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Terminal Window */
+  .vs-terminal {
+    background: #040711;
+    border: 1px solid rgba(34, 211, 238, 0.2);
+    border-radius: 0.85rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    color: #a7f3d0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vs-glass-card, .btn-vs-cyan, .btn-vs-outline {
+      transition: none !important;
+      transform: none !important;
+    }
+  }
+</style>
+
+<!-- ================= HERO SECTION ================= -->
+<section class="py-5 position-relative" style="background: radial-gradient(130% 110% at 15% 0%, #0d2238 0%, var(--vs-bg-dark) 60%);">
+
+  <div class="container-fluid px-4 px-lg-5">
+    <div class="row align-items-center py-4 g-5">
+
+      <!-- Left Column: Copy & CTAs -->
+      <div class="col-lg-6" data-aos="fade-right">
+
+        <div class="d-inline-flex align-items-center gap-2 px-3 py-15 mb-3 rounded-pill bg-info bg-opacity-10 border border-info border-opacity-25 text-info font-mono small">
+          <span class="vs-status-pulse"></span>
+          <span>ZERO-KNOWLEDGE CRYPTOGRAPHY ONLINE</span>
+        </div>
+
+        <h1 class="display-4 fw-extrabold text-white mb-3 lh-sm font-heading">
+          Share files.<br>
+          <span class="vs-gradient-text">Never the trust.</span>
+        </h1>
+
+        <p class="lead text-secondary mb-4 fs-5" style="max-width:540px;">
+          VaultShare encrypts every file client-side before it ever leaves your browser.
+          Retain complete authority over access passcodes, download limits, and self-destruct timers.
+        </p>
+
+        <div class="d-flex flex-wrap gap-3 mb-4">
+          <a href="{% url 'login' %}" class="btn btn-vs-cyan btn-lg px-4 py-3 rounded-3 d-inline-flex align-items-center gap-2">
+            <i class="bi bi-shield-lock-fill"></i>
+            <span>Access Vault / Register</span>
+          </a>
+
+        </div>
+
+        <!-- Badges & Verification -->
+        <div class="d-flex flex-wrap gap-4 font-mono small text-secondary pt-2 border-top border-secondary border-opacity-10">
+          <span class="d-flex align-items-center gap-1.5"><i class="bi bi-check-circle-fill text-info"></i> AES-256</span>
+          <span class="d-flex align-items-center gap-1.5"><i class="bi bi-check-circle-fill text-info"></i> RSA-2048 Envelope</span>
+          <span class="d-flex align-items-center gap-1.5"><i class="bi bi-check-circle-fill text-info"></i> SHA-256 </span>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Interactive Simulator & SVG Showcase -->
+      <div class="col-lg-6" data-aos="fade-left">
+
+        <div class="vs-glow-ring p-3 p-md-4" style="background: var(--vs-surface-1);">
+
+          <!-- Switcher Bar -->
+          <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-25">
+            <div class="d-flex align-items-center gap-2">
+              <span class="rounded-circle bg-danger opacity-75" style="width:10px; height:10px;"></span>
+              <span class="rounded-circle bg-warning opacity-75" style="width:10px; height:10px;"></span>
+              <span class="rounded-circle bg-success opacity-75" style="width:10px; height:10px;"></span>
+              <span class="font-mono text-secondary ms-2 small">vaultshare-client-v2.4.0</span>
+            </div>
+
+            <div class="d-flex gap-1">
+              <button class="vs-tab-btn active" id="tab-sim-btn" onclick="toggleHeroView('sim')">
+                <i class="bi bi-cpu me-1"></i>Live Cipher
+              </button>
+              <button class="vs-tab-btn" id="tab-svg-btn" onclick="toggleHeroView('svg')">
+                <i class="bi bi-image me-1"></i>Diagram View
+              </button>
+            </div>
+          </div>
+
+          <!-- View 1: Interactive Client Encryption Sandbox -->
+          <div id="hero-view-sim" class="py-2">
+            <div class="mb-3">
+              <label class="form-label font-mono small text-secondary d-flex justify-content-between">
+                <span>SELECT SAMPLE DATA TO ENCRYPT:</span>
+                <span class="text-info">Local Client RAM</span>
+              </label>
+              <select id="sim-file-select" class="form-select font-mono bg-dark text-light border-secondary border-opacity-25 small" onchange="runEncryptionSim()">
+                <option value="financial">Financial_Q4_Audit.pdf (4.2 MB)</option>
+                <option value="credentials">API_Keys_And_Secrets.json (12 KB)</option>
+                <option value="patient">Medical_Records_Encrypted.dicom (18 MB)</option>
+              </select>
+            </div>
+
+            <!-- Pipeline Status Box -->
+            <div class="vs-terminal p-3 mb-3">
+              <div class="d-flex justify-content-between text-secondary mb-1">
+                <span>[1] AES Key Derivation:</span>
+                <span id="sim-step1" class="text-success fw-bold">AES-256 READY</span>
+              </div>
+              <div class="d-flex justify-content-between text-secondary mb-1">
+                <span>[2] Integrity Checksum:</span>
+                <span id="sim-hash" class="text-info font-mono text-truncate ms-2" style="max-width:210px;">8f9b2c01a...e4d9</span>
+              </div>
+              <div class="d-flex justify-content-between text-secondary">
+                <span>[3] Zero-Knowledge Envelope:</span>
+                <span id="sim-step3" class="text-warning">LOCKED (RSA-2048)</span>
+              </div>
+            </div>
+
+            <!-- Output Link Preview Box -->
+            <div class="p-3 rounded bg-dark border border-info border-opacity-30 d-flex align-items-center justify-content-between">
+              <div>
+                <div class="font-mono text-secondary text-uppercase mb-1" style="font-size:0.7rem;">Generated Encrypted Share URL</div>
+                <div class="font-mono text-info fw-bold small text-break" id="sim-output-url">https://vaultshare.io/s/v8a9-x719#k=992f8a</div>
+              </div>
+              <button class="btn btn-sm btn-outline-info font-mono" onclick="copySimUrl()" id="sim-copy-btn">
+                <i class="bi bi-clipboard me-1"></i>Copy
+              </button>
+            </div>
+          </div>
+
+          <!-- View 2: Original SVG Hero Illustration Frame -->
+          <div id="hero-view-svg" class="text-center py-3" style="display: none;">
+            <img src="{% static '/img/secure_file_sharing_hero_svg.svg' %}"
+                 class="img-fluid rounded"
+                 style="max-height: 330px;"
+                 alt="Secure file sharing illustration">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+<!-- ================= SECURITY METRICS STRIP ================= -->
+<section class="py-4 position-relative" style="background-color: var(--vs-surface-1); border-top: 1px solid var(--vs-border); border-bottom: 1px solid var(--vs-border);">
+
+  <div class="container">
+    <div class="row text-center g-4">
+
+      <div class="col-6 col-md-3">
+        <div class="vs-metric-val">256-bit</div>
+        <div class="text-secondary small font-mono text-uppercase">AES Encryption</div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="vs-metric-val">RSA-2048</div>
+        <div class="text-secondary small font-mono text-uppercase">Asymmetric Key Wrap</div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="vs-metric-val">100%</div>
+        <div class="text-secondary small font-mono text-uppercase">Audit Trail Logging</div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="vs-metric-val">0</div>
+        <div class="text-secondary small font-mono text-uppercase">Plaintext Server Bytes</div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+<!-- ================= FEATURES ================= -->
+<section class="py-5" id="features" style="background-color: var(--vs-bg-dark);">
+
+  <div class="container py-4">
+
+    <div class="text-center mb-5" data-aos="fade-up">
+      <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 mb-2 px-3 py-2 rounded-pill font-mono">
+        ENTERPRISE-GRADE PROTECTION
+      </span>
+      <h2 class="fw-bold text-white font-heading display-6">Built for files that cannot leak</h2>
+      <p class="text-secondary mx-auto fs-6" style="max-width:640px;">
+        Every upload, share, and download enforces three cryptographically guaranteed safeguards — so sensitive documents remain 100% confidential.
+      </p>
+    </div>
+
+    <div class="row g-4">
+
+      <!-- Feature 1 -->
+      <div class="col-md-4">
+        <div class="vs-glass-card card h-100 p-4 text-center">
+          <div class="vs-icon-box mx-auto mb-3">
+            <i class="bi bi-shield-lock-fill"></i>
+          </div>
+          <h5 class="text-white fw-bold font-heading mb-2">Zero-Knowledge Storage</h5>
+          <p class="text-secondary mb-0 small">
+            Files are transformed into scrambled ciphertext before leaving your machine. Not even VaultShare administrators can read your data.
+          </p>
+        </div>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="col-md-4">
+        <div class="vs-glass-card card h-100 p-4 text-center">
+          <div class="vs-icon-box mx-auto mb-3">
+            <i class="bi bi-sliders2"></i>
+          </div>
+          <h5 class="text-white fw-bold font-heading mb-2">Granular Access Rules</h5>
+          <p class="text-secondary mb-0 small">
+            Configure passcode protection, strict expiration dates, and custom download count thresholds for every link you distribute.
+          </p>
+        </div>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="col-md-4">
+        <div class="vs-glass-card card h-100 p-4 text-center">
+          <div class="vs-icon-box mx-auto mb-3">
+            <i class="bi bi-journal-check"></i>
+          </div>
+          <h5 class="text-white fw-bold font-heading mb-2">Tamper-Evident Logs</h5>
+          <p class="text-secondary mb-0 small">
+            Every access attempt, password validation, and download event is recorded to an immutable, traceable audit trail.
+          </p>
+        </div>
+      </div>
+
+      <!-- Feature 4 -->
+      <div class="col-md-4">
+        <div class="vs-glass-card card h-100 p-4 text-center">
+          <div class="vs-icon-box mx-auto mb-3">
+            <i class="bi bi-fire"></i>
+          </div>
+          <h5 class="text-white fw-bold font-heading mb-2">Self-Destruct Links</h5>
+          <p class="text-secondary mb-0 small">
+            Links auto-expire immediately once max downloads are met or the timer elapses, scrubbing encrypted payload pointers automatically.
+          </p>
+        </div>
+      </div>
+
+      <!-- Feature 5 -->
+      <div class="col-md-4">
+        <div class="vs-glass-card card h-100 p-4 text-center">
+          <div class="vs-icon-box mx-auto mb-3">
+            <i class="bi bi-fingerprint"></i>
+          </div>
+          <h5 class="text-white fw-bold font-heading mb-2">SHA-256 Integrity Checks</h5>
+          <p class="text-secondary mb-0 small">
+            Recipients automatically verify the cryptographic hash fingerprint to guarantee files were not altered during transmission.
+          </p>
+        </div>
+      </div>
+
+      <!-- Feature 6 -->
+      <div class="col-md-4">
+        <div class="vs-glass-card card h-100 p-4 text-center">
+          <div class="vs-icon-box mx-auto mb-3">
+            <i class="bi bi-key-fill"></i>
+          </div>
+          <h5 class="text-white fw-bold font-heading mb-2">Client Key Isolation</h5>
+          <p class="text-secondary mb-0 small">
+            Decryption keys exist exclusively in browser RAM or key wrappers during active sessions and are never stored in databases.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ================= HOW IT WORKS ================= -->
+<section class="py-5" id="how-it-works" style="background-color: var(--vs-surface-1);">
+
+  <div class="container py-4">
+
+    <div class="text-center mb-5" data-aos="fade-up">
+      <h2 class="fw-bold text-white font-heading display-6">Three steps to absolute privacy</h2>
+      <p class="text-secondary mx-auto" style="max-width:600px;">
+        Simple for senders and recipients, impossible for unauthorized interceptors.
+      </p>
+    </div>
+
+    <div class="row g-4">
+
+      <!-- Step 01 -->
+      <div class="col-md-4">
+        <div class="vs-glass-card card h-100 p-4">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <div class="vs-flow-badge">01</div>
+            <i class="bi bi-file-earmark-lock text-info fs-4"></i>
+          </div>
+          <h5 class="text-white fw-bold font-heading">1. Select & Encrypt</h5>
+          <p class="text-secondary mb-0 small">
+            Drag any file into VaultShare. Your browser generates a unique AES-256 secret key and encrypts the file locally in Web Crypto RAM.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 02 -->
+      <div class="col-md-4">
+        <div class="vs-glass-card card h-100 p-4">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <div class="vs-flow-badge">02</div>
+            <i class="bi bi-cloud-upload text-info fs-4"></i>
+          </div>
+          <h5 class="text-white fw-bold font-heading">2. Store Ciphertext</h5>
+          <p class="text-secondary mb-0 small">
+            Only the encrypted ciphertext and wrapped key payload reach storage. SHA-256 hashing locks in file integrity before link creation.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 03 -->
+      <div class="col-md-4">
+        <div class="vs-glass-card card h-100 p-4">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <div class="vs-flow-badge">03</div>
+            <i class="bi bi-send-check text-info fs-4"></i>
+          </div>
+          <h5 class="text-white fw-bold font-heading">3. Share & Monitor</h5>
+          <p class="text-secondary mb-0 small">
+            Send the secure link with optional passcode or download caps. Watch every access event in your live dashboard audit log.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ================= LIVE AUDIT LOG SIMULATOR ================= -->
+<section class="py-5" id="audit-log-preview" style="background-color: var(--vs-bg-dark);">
+
+  <div class="container py-3">
+    <div class="row align-items-center g-5">
+
+      <div class="col-lg-5" data-aos="fade-right">
+        <div class="d-inline-flex align-items-center gap-2 px-3 py-1 mb-3 rounded-pill bg-success bg-opacity-10 border border-success border-opacity-25 text-success font-mono small">
+          <i class="bi bi-journal-code"></i> TAMPER-EVIDENT LOGGING
+        </div>
+        <h2 class="fw-bold text-white font-heading mb-3 display-6">Complete visibility. Zero compromises.</h2>
+        <p class="text-secondary mb-4">
+          VaultShare provides real-time access forensics. Know exact timestamps, IP addresses, download counts, and passcode validation results for every file you share.
+        </p>
+
+        <div class="d-flex flex-column gap-3">
+          <div class="vs-glass-card p-3 d-flex align-items-center gap-3">
+            <i class="bi bi-shield-check text-info fs-4"></i>
+            <div>
+              <div class="text-white fw-semibold small">Revocate Access Instantly</div>
+              <div class="text-secondary small">Kill links immediately from your dashboard with one click.</div>
+            </div>
+          </div>
+          <div class="vs-glass-card p-3 d-flex align-items-center gap-3">
+            <i class="bi bi-eye-slash-fill text-info fs-4"></i>
+            <div>
+              <div class="text-white fw-semibold small">Zero Plaintext Exposure</div>
+              <div class="text-secondary small">Database records contain only hashes and encrypted payloads.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-lg-7" data-aos="fade-left">
+        <div class="vs-terminal p-4 shadow-lg">
+          <div class="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom border-secondary border-opacity-25">
+            <span class="text-info font-mono"><i class="bi bi-terminal me-2"></i>live_audit_stream.log</span>
+            <span class="badge bg-success bg-opacity-20 text-success border border-success border-opacity-30 font-mono">STREAMING</span>
+          </div>
+
+          <div id="audit-log-box" style="height: 220px; overflow-y: hidden; display:flex; flex-direction:column; justify-content:flex-end;">
+            <div class="text-secondary mb-2">[02:17:40] <span class="text-info">FILE_UPLOAD</span> | id=v89a2 | hash=8f9b2c... | size=4.2MB | status=ENCRYPTED</div>
+            <div class="text-secondary mb-2">[02:18:05] <span class="text-warning">LINK_CREATED</span> | exp=24h | max_downloads=3 | pass=ENABLED</div>
+            <div class="text-secondary mb-2">[02:18:44] <span class="text-success">ACCESS_GRANTED</span> | ip=198.51.100.42 | pass=VERIFIED | dl=1/3</div>
+            <div class="text-secondary mb-2">[02:19:12] <span class="text-success">ACCESS_GRANTED</span> | ip=198.51.100.42 | pass=VERIFIED | dl=2/3</div>
+            <div class="text-secondary">[02:20:00] <span class="text-danger">LINK_DESTRUCTED</span> | reason=MAX_DOWNLOADS_REACHED | payload=CLEARED</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+<!-- ================= FINAL CTA ================= -->
+<section class="py-5 vs-cta-band">
+
+  <div class="container text-center py-4" data-aos="fade-up">
+
+    <h2 class="fw-bold text-white font-heading display-6 mb-3">Ready to secure your files?</h2>
+    <p class="text-secondary mx-auto mb-4 fs-6" style="max-width:520px;">
+      Create your free VaultShare account and share your first end-to-end encrypted file in under 60 seconds.
+    </p>
+
+    <div class="d-flex justify-content-center gap-3">
+      <a href="{% url 'signup' %}" class="btn btn-vs-cyan btn-lg px-5 py-3 rounded-3 d-inline-flex align-items-center gap-2">
+        <i class="bi bi-shield-lock-fill"></i>
+        <span>Get Started Now</span>
+      </a>
+      <a href="{% url 'login' %}" class="btn btn-vs-outline btn-lg px-4 py-3 rounded-3">
+        <span>Log In</span>
+      </a>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- Interactive Logic for Hero Simulator & Audit Feed -->
+<script>
+  function toggleHeroView(view) {
+    const simView = document.getElementById('hero-view-sim');
+    const svgView = document.getElementById('hero-view-svg');
+    const simBtn = document.getElementById('tab-sim-btn');
+    const svgBtn = document.getElementById('tab-svg-btn');
+
+    if (view === 'sim') {
+      simView.style.display = 'block';
+      svgView.style.display = 'none';
+      simBtn.classList.add('active');
+      svgBtn.classList.remove('active');
+    } else {
+      simView.style.display = 'none';
+      svgView.style.display = 'block';
+      svgBtn.classList.add('active');
+      simBtn.classList.remove('active');
+    }
+  }
+
+  function runEncryptionSim() {
+    const sel = document.getElementById('sim-file-select').value;
+    const hashElem = document.getElementById('sim-hash');
+    const urlElem = document.getElementById('sim-output-url');
+
+    const mockHashes = {
+      financial: '8f9b2c01a4e29d71...',
+      credentials: '3e41b99c001f7a22...',
+      patient: '7c8801d9f2231b40...'
+    };
+
+    const mockUrls = {
+      financial: 'https://vaultshare.io/s/fin-99a1#k=aes256',
+      credentials: 'https://vaultshare.io/s/sec-44x2#k=rsa2048',
+      patient: 'https://vaultshare.io/s/med-11z8#k=gcm256'
+    };
+
+    hashElem.textContent = mockHashes[sel] || '8f9b2c01a...e4d9';
+    urlElem.textContent = mockUrls[sel] || 'https://vaultshare.io/s/v8a9-x719#k=992f8a';
+  }
+
+  function copySimUrl() {
+    const text = document.getElementById('sim-output-url').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('sim-copy-btn');
+      btn.innerHTML = '<i class="bi bi-check2 me-1"></i>Copied';
+      setTimeout(() => {
+        btn.innerHTML = '<i class="bi bi-clipboard me-1"></i>Copy';
+      }, 2000);
+    });
+  }
+</script>
+
+{% endblock %}

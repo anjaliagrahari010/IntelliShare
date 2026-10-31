@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "trained_at": "2026-09-16T02:40:51.585009",
+  "sample_count": 10,
+  "feature_count": 19,
+  "feature_names": [
+    "events_5m",
+    "events_15m",
+    "events_1h",
+    "failed_logins_1h",
+    "failed_otps_1h",
+    "successful_logins_1h",
+    "downloads_1h",
+    "uploads_1h",
+    "shares_1h",
+    "access_requests_1h",
+    "failed_access_1h",
+    "integrity_failures_1h",
+    "malware_events_1h",
+    "distinct_ips_24h",
+    "distinct_devices_24h",
+    "auth_failure_ratio",
+    "time_since_last_event_sec",
+    "different_files_accessed_1h",
+    "repeated_resource_access_1h"
+  ],
+  "contamination": 0.05,
+  "n_estimators": 100,
+  "random_state": 42,
+  "train_anomalies_detected": 1
+}
